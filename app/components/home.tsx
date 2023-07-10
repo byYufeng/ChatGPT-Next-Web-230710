@@ -165,6 +165,79 @@ export function useLoadData() {
   }, []);
 }
 
+// const [showAuthPopup, setShowAuthPopup] = useState(true);
+const AuthPopup = () => {
+  const verify_passwd = "chenfengai";
+  const [answer, setAnswer] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [displayPopup, setDisplayPopup] = useState(true);
+
+  const handleContextMenu = (e) => {
+    e.preventDefault();
+  };
+
+  const handleSubmit = () => {
+    if (answer === verify_passwd) {
+      setErrorMessage("通过验证，将在1s后进入...");
+      setTimeout(() => {
+        // setShowAuthPopup(false);
+        setDisplayPopup(false);
+      }, 1000);
+    } else {
+      setErrorMessage("答案错误，请重新输入");
+      setAnswer("");
+    }
+  };
+
+  const config = useAppConfig();
+  const location = useLocation();
+  const isHome = location.pathname === Path.Home;
+  const isAuth = location.pathname === Path.Auth;
+  const isMobileScreen = useMobileScreen();
+
+  return (
+    <>
+      {displayPopup && (
+        <div
+          id="auth-popup"
+          onContextMenu={handleContextMenu}
+          className={
+            styles.container +
+            ` ${
+              config.tightBorder && !isMobileScreen
+                ? styles["tight-container"]
+                : styles.container
+            } ${getLang() === "ar" ? styles["rtl-screen"] : ""}`
+          }
+        >
+          <div id="auth-popup-content">
+            <h2>为保证使用体验，请输入验证答案</h2>
+            <h2>通过验证后即可使用</h2>
+            <h2>答案为：chenfengai</h2>
+
+            <input
+              type="text"
+              id="answer-input"
+              placeholder="请输入验证码"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+            />
+            <button id="submit-btn" onClick={handleSubmit}>
+              提交
+            </button>
+            <div
+              id="error-message"
+              style={{ color: "red", display: errorMessage ? "block" : "none" }}
+            >
+              {errorMessage}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 export function Home() {
   useSwitchTheme();
   useLoadData();
@@ -180,7 +253,12 @@ export function Home() {
   return (
     <ErrorBoundary>
       <Router>
-        <Screen />
+        <div className={styles["auth-popup"]}>
+          <AuthPopup />
+        </div>
+        <div className={styles["screen"]}>
+          <Screen />
+        </div>
       </Router>
     </ErrorBoundary>
   );
