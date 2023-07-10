@@ -325,3 +325,23 @@
 .rtl-screen {
   direction: rtl;
 }
+
+.screen {
+  position: relative;
+}
+
+.auth-popup {
+  position: absolute;
+  z-index: 9999; /* 设置一个较高的z-index值，确保它在其他元素之上 */
+
+  background-color: gray; /* 设置背景色为灰色 */
+  // width: 400px; /* 设置宽度为400像素 */
+  // height: 300px; /* 设置高度为300像素 */
+  // display: flex; /* 使用flex布局 */
+  // justify-content: center; /* 水平居中对齐 */
+  // align-items: center; /* 垂直居中对齐 */
+  // text-align: center;
+
+  left: 50%;
+  transform: translateX(-50%);
+}
